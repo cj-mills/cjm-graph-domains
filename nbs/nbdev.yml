@@ -1,0 +1,9 @@
+project:
+  output-dir: _docs
+
+website:
+  title: "cjm-graph-domains"
+  site-url: "https://cj-mills.github.io/cjm-graph-domains"
+  description: "A shared library of Pydantic models and standard schemas for the cjm-graph-plugin-system ecosystem, enabling type-safe domain definitions across plugins and UIs."
+  repo-branch: main
+  repo-url: "https://github.com/cj-mills/cjm-graph-domains"
