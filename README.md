@@ -8,3 +8,137 @@
 ``` bash
 pip install cjm_graph_domains
 ```
+
+## Project Structure
+
+    nbs/
+    ├── domains/ (2)
+    │   ├── knowledge.ipynb  # Domain schemas for knowledge management (Person, Work, Concept, Topic, Quote)
+    │   └── relations.ipynb  # Standard relationship types for knowledge graphs
+    └── core.ipynb  # Base Pydantic models and conversion logic for domain-specific graph schemas
+
+Total: 3 notebooks across 1 directory
+
+## Module Dependencies
+
+``` mermaid
+graph LR
+    core[core<br/>Core]
+    domains_knowledge[domains.knowledge<br/>Knowledge Domain]
+    domains_relations[domains.relations<br/>Knowledge Relations]
+
+    domains_knowledge --> core
+    domains_relations --> domains_knowledge
+```
+
+*2 cross-module dependencies detected*
+
+## CLI Reference
+
+No CLI commands found in this project.
+
+## Module Overview
+
+Detailed documentation for each module in the project:
+
+### Core (`core.ipynb`)
+
+> Base Pydantic models and conversion logic for domain-specific graph
+> schemas
+
+#### Import
+
+``` python
+from cjm_graph_domains.core import (
+    DomainNode
+)
+```
+
+#### Classes
+
+``` python
+class DomainNode(BaseModel):
+    "Base Pydantic model for domain-specific graph nodes."
+    
+    def get_label(self) -> str:  # Node label for the graph (defaults to class name)
+            """Return the node label."""
+            return self.__class__.__name__
+    
+        def to_graph_node(
+            self,
+            sources: List[SourceRef] = []  # External data references for provenance
+        ) -> GraphNode:  # Generic GraphNode for storage in graph plugins
+        "Return the node label."
+    
+    def to_graph_node(
+            self,
+            sources: List[SourceRef] = []  # External data references for provenance
+        ) -> GraphNode:  # Generic GraphNode for storage in graph plugins
+        "Convert this domain model to a generic GraphNode."
+```
+
+### Knowledge Domain (`knowledge.ipynb`)
+
+> Domain schemas for knowledge management (Person, Work, Concept, Topic,
+> Quote)
+
+#### Import
+
+``` python
+from cjm_graph_domains.domains.knowledge import (
+    Person,
+    Work,
+    Concept,
+    Topic,
+    Quote
+)
+```
+
+#### Classes
+
+``` python
+class Person(DomainNode):
+    "A human being, historical figure, or speaker."
+```
+
+``` python
+class Work(DomainNode):
+    "A creative work (book, speech, article, etc.)."
+```
+
+``` python
+class Concept(DomainNode):
+    "An abstract idea, theory, or framework."
+```
+
+``` python
+class Topic(DomainNode):
+    "A subject or theme discussed in content."
+```
+
+``` python
+class Quote(DomainNode):
+    "A verbatim segment of notable text."
+```
+
+### Knowledge Relations (`relations.ipynb`)
+
+> Standard relationship types for knowledge graphs
+
+#### Import
+
+``` python
+from cjm_graph_domains.domains.relations import (
+    KnowledgeRelations
+)
+```
+
+#### Classes
+
+``` python
+class KnowledgeRelations:
+    "Registry of standard edge types for knowledge graphs."
+    
+    def all(cls) -> list:  # List of all relation type strings
+        "Return all defined relation types."
+```
