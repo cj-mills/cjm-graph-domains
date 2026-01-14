@@ -12,12 +12,13 @@ pip install cjm_graph_domains
 ## Project Structure
 
     nbs/
-    ├── domains/ (2)
+    ├── domains/ (3)
     │   ├── knowledge.ipynb  # Domain schemas for knowledge management (Person, Work, Concept, Topic, Quote)
-    │   └── relations.ipynb  # Standard relationship types for knowledge graphs
+    │   ├── relations.ipynb  # Standard relationship types for knowledge and structure graphs
+    │   └── structure.ipynb  # Domain schemas for content structure (Document, Segment)
     └── core.ipynb  # Base Pydantic models and conversion logic for domain-specific graph schemas
 
-Total: 3 notebooks across 1 directory
+Total: 4 notebooks across 1 directory
 
 ## Module Dependencies
 
@@ -25,13 +26,16 @@ Total: 3 notebooks across 1 directory
 graph LR
     core[core<br/>Core]
     domains_knowledge[domains.knowledge<br/>Knowledge Domain]
-    domains_relations[domains.relations<br/>Knowledge Relations]
+    domains_relations[domains.relations<br/>Domain Relations]
+    domains_structure[domains.structure<br/>Content Structure]
 
     domains_knowledge --> core
+    domains_relations --> domains_structure
     domains_relations --> domains_knowledge
+    domains_structure --> core
 ```
 
-*2 cross-module dependencies detected*
+*4 cross-module dependencies detected*
 
 ## CLI Reference
 
@@ -121,15 +125,16 @@ class Quote(DomainNode):
     "A verbatim segment of notable text."
 ```
 
-### Knowledge Relations (`relations.ipynb`)
+### Domain Relations (`relations.ipynb`)
 
-> Standard relationship types for knowledge graphs
+> Standard relationship types for knowledge and structure graphs
 
 #### Import
 
 ``` python
 from cjm_graph_domains.domains.relations import (
-    KnowledgeRelations
+    KnowledgeRelations,
+    StructureRelations
 )
 ```
 
@@ -141,4 +146,37 @@ class KnowledgeRelations:
     
     def all(cls) -> list:  # List of all relation type strings
         "Return all defined relation types."
+```
+
+``` python
+class StructureRelations:
+    "Registry of standard edge types for content structure graphs."
+    
+    def all(cls) -> list:  # List of all relation type strings
+        "Return all defined relation types."
+```
+
+### Content Structure (`structure.ipynb`)
+
+> Domain schemas for content structure (Document, Segment)
+
+#### Import
+
+``` python
+from cjm_graph_domains.domains.structure import (
+    Document,
+    Segment
+)
+```
+
+#### Classes
+
+``` python
+class Document(DomainNode):
+    "A logical container for structured content."
+```
+
+``` python
+class Segment(DomainNode):
+    "An atomic unit of text within a document."
 ```

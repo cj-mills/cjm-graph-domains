@@ -23,4 +23,12 @@ d = { 'settings': { 'branch': 'main',
             'cjm_graph_domains.domains.relations': { 'cjm_graph_domains.domains.relations.KnowledgeRelations': ( 'domains/relations.html#knowledgerelations',
                                                                                                                  'cjm_graph_domains/domains/relations.py'),
                                                      'cjm_graph_domains.domains.relations.KnowledgeRelations.all': ( 'domains/relations.html#knowledgerelations.all',
-                                                                                                                     'cjm_graph_domains/domains/relations.py')}}}
+                                                                                                                     'cjm_graph_domains/domains/relations.py'),
+                                                     'cjm_graph_domains.domains.relations.StructureRelations': ( 'domains/relations.html#structurerelations',
+                                                                                                                 'cjm_graph_domains/domains/relations.py'),
+                                                     'cjm_graph_domains.domains.relations.StructureRelations.all': ( 'domains/relations.html#structurerelations.all',
+                                                                                                                     'cjm_graph_domains/domains/relations.py')},
+            'cjm_graph_domains.domains.structure': { 'cjm_graph_domains.domains.structure.Document': ( 'domains/structure.html#document',
+                                                                                                       'cjm_graph_domains/domains/structure.py'),
+                                                     'cjm_graph_domains.domains.structure.Segment': ( 'domains/structure.html#segment',
+                                                                                                      'cjm_graph_domains/domains/structure.py')}}}
