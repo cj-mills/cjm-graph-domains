@@ -1,0 +1,258 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "cjm-graph-domains",
+    "section": "",
+    "text": "pip install cjm_graph_domains",
+    "crumbs": [
+      "cjm-graph-domains"
+    ]
+  },
+  {
+    "objectID": "index.html#install",
+    "href": "index.html#install",
+    "title": "cjm-graph-domains",
+    "section": "",
+    "text": "pip install cjm_graph_domains",
+    "crumbs": [
+      "cjm-graph-domains"
+    ]
+  },
+  {
+    "objectID": "index.html#project-structure",
+    "href": "index.html#project-structure",
+    "title": "cjm-graph-domains",
+    "section": "Project Structure",
+    "text": "Project Structure\nnbs/\n├── domains/ (3)\n│   ├── knowledge.ipynb  # Domain schemas for knowledge management (Person, Work, Concept, Topic, Quote)\n│   ├── relations.ipynb  # Standard relationship types for knowledge and structure graphs\n│   └── structure.ipynb  # Domain schemas for content structure (Document, Segment)\n└── core.ipynb  # Base Pydantic models and conversion logic for domain-specific graph schemas\nTotal: 4 notebooks across 1 directory",
+    "crumbs": [
+      "cjm-graph-domains"
+    ]
+  },
+  {
+    "objectID": "index.html#module-dependencies",
+    "href": "index.html#module-dependencies",
+    "title": "cjm-graph-domains",
+    "section": "Module Dependencies",
+    "text": "Module Dependencies\ngraph LR\n    core[core&lt;br/&gt;Core]\n    domains_knowledge[domains.knowledge&lt;br/&gt;Knowledge Domain]\n    domains_relations[domains.relations&lt;br/&gt;Domain Relations]\n    domains_structure[domains.structure&lt;br/&gt;Content Structure]\n\n    domains_knowledge --&gt; core\n    domains_relations --&gt; domains_knowledge\n    domains_relations --&gt; domains_structure\n    domains_structure --&gt; core\n4 cross-module dependencies detected",
+    "crumbs": [
+      "cjm-graph-domains"
+    ]
+  },
+  {
+    "objectID": "index.html#cli-reference",
+    "href": "index.html#cli-reference",
+    "title": "cjm-graph-domains",
+    "section": "CLI Reference",
+    "text": "CLI Reference\nNo CLI commands found in this project.",
+    "crumbs": [
+      "cjm-graph-domains"
+    ]
+  },
+  {
+    "objectID": "index.html#module-overview",
+    "href": "index.html#module-overview",
+    "title": "cjm-graph-domains",
+    "section": "Module Overview",
+    "text": "Module Overview\nDetailed documentation for each module in the project:\n\nCore (core.ipynb)\n\nBase Pydantic models and conversion logic for domain-specific graph schemas\n\n\nImport\nfrom cjm_graph_domains.core import (\n    DomainNode\n)\n\n\nClasses\nclass DomainNode(BaseModel):\n    \"Base Pydantic model for domain-specific graph nodes.\"\n    \n    def get_label(self) -&gt; str:  # Node label for the graph (defaults to class name)\n            \"\"\"Return the node label.\"\"\"\n            return self.__class__.__name__\n    \n        def to_graph_node(\n            self,\n            sources: List[SourceRef] = []  # External data references for provenance\n        ) -&gt; GraphNode:  # Generic GraphNode for storage in graph plugins\n        \"Return the node label.\"\n    \n    def to_graph_node(\n            self,\n            sources: List[SourceRef] = []  # External data references for provenance\n        ) -&gt; GraphNode:  # Generic GraphNode for storage in graph plugins\n        \"Convert this domain model to a generic GraphNode.\"\n\n\n\nKnowledge Domain (knowledge.ipynb)\n\nDomain schemas for knowledge management (Person, Work, Concept, Topic, Quote)\n\n\nImport\nfrom cjm_graph_domains.domains.knowledge import (\n    Person,\n    Work,\n    Concept,\n    Topic,\n    Quote\n)\n\n\nClasses\nclass Person(DomainNode):\n    \"A human being, historical figure, or speaker.\"\nclass Work(DomainNode):\n    \"A creative work (book, speech, article, etc.).\"\nclass Concept(DomainNode):\n    \"An abstract idea, theory, or framework.\"\nclass Topic(DomainNode):\n    \"A subject or theme discussed in content.\"\nclass Quote(DomainNode):\n    \"A verbatim segment of notable text.\"\n\n\n\nDomain Relations (relations.ipynb)\n\nStandard relationship types for knowledge and structure graphs\n\n\nImport\nfrom cjm_graph_domains.domains.relations import (\n    KnowledgeRelations,\n    StructureRelations\n)\n\n\nClasses\nclass KnowledgeRelations:\n    \"Registry of standard edge types for knowledge graphs.\"\n    \n    def all(cls) -&gt; list:  # List of all relation type strings\n        \"Return all defined relation types.\"\nclass StructureRelations:\n    \"Registry of standard edge types for content structure graphs.\"\n    \n    def all(cls) -&gt; list:  # List of all relation type strings\n        \"Return all defined relation types.\"\n\n\n\nContent Structure (structure.ipynb)\n\nDomain schemas for content structure (Document, Segment)\n\n\nImport\nfrom cjm_graph_domains.domains.structure import (\n    Document,\n    Segment\n)\n\n\nClasses\nclass Document(DomainNode):\n    \"A logical container for structured content.\"\nclass Segment(DomainNode):\n    \"An atomic unit of text within a document.\"",
+    "crumbs": [
+      "cjm-graph-domains"
+    ]
+  },
+  {
+    "objectID": "domains/structure.html",
+    "href": "domains/structure.html",
+    "title": "Content Structure",
+    "section": "",
+    "text": "Represents a logical container for content such as a book chapter, podcast episode, lecture, or transcript. Documents group related segments into a traversable unit.\n\nsource\n\n\n\ndef Document(\n    data:Any\n)-&gt;None:\n\nA logical container for structured content.\n\n# Create a Document node\ndoc = Document(title=\"1. Laying Plans\", media_type=\"audio\")\nprint(f\"Document: {doc.title}\")\nprint(f\"Media type: {doc.media_type}\")\nprint(f\"Label: {doc.get_label()}\")\n\nDocument: 1. Laying Plans\nMedia type: audio\nLabel: Document\n\n\n\n# Convert to GraphNode (name auto-populated from title)\ngraph_node = doc.to_graph_node()\nprint(f\"GraphNode properties: {graph_node.properties}\")\nassert graph_node.properties['name'] == \"1. Laying Plans\"\n\nGraphNode properties: {'title': '1. Laying Plans', 'media_type': 'audio', 'name': '1. Laying Plans'}",
+    "crumbs": [
+      "domains",
+      "Content Structure"
+    ]
+  },
+  {
+    "objectID": "domains/structure.html#document",
+    "href": "domains/structure.html#document",
+    "title": "Content Structure",
+    "section": "",
+    "text": "Represents a logical container for content such as a book chapter, podcast episode, lecture, or transcript. Documents group related segments into a traversable unit.\n\nsource\n\n\n\ndef Document(\n    data:Any\n)-&gt;None:\n\nA logical container for structured content.\n\n# Create a Document node\ndoc = Document(title=\"1. Laying Plans\", media_type=\"audio\")\nprint(f\"Document: {doc.title}\")\nprint(f\"Media type: {doc.media_type}\")\nprint(f\"Label: {doc.get_label()}\")\n\nDocument: 1. Laying Plans\nMedia type: audio\nLabel: Document\n\n\n\n# Convert to GraphNode (name auto-populated from title)\ngraph_node = doc.to_graph_node()\nprint(f\"GraphNode properties: {graph_node.properties}\")\nassert graph_node.properties['name'] == \"1. Laying Plans\"\n\nGraphNode properties: {'title': '1. Laying Plans', 'media_type': 'audio', 'name': '1. Laying Plans'}",
+    "crumbs": [
+      "domains",
+      "Content Structure"
+    ]
+  },
+  {
+    "objectID": "domains/structure.html#segment",
+    "href": "domains/structure.html#segment",
+    "title": "Content Structure",
+    "section": "Segment",
+    "text": "Segment\nRepresents an atomic unit of text within a document, typically a sentence or paragraph. Segments are linked sequentially via NEXT edges to form a traversable “narrative spine”.\nFor audio/video content, optional timing fields (start_time, end_time) enable alignment with the source media.\n\nsource\n\nSegment\n\ndef Segment(\n    data:Any\n)-&gt;None:\n\nAn atomic unit of text within a document.\n\n# Create a Segment node\nsegment = Segment(\n    text=\"The art of war is of vital importance to the state.\",\n    index=2,\n    start_time=5.2,\n    end_time=8.7,\n    role=\"content\"\n)\nprint(f\"Segment [{segment.index}]: {segment.text}\")\nprint(f\"Timing: {segment.start_time}s - {segment.end_time}s\")\n\nSegment [2]: The art of war is of vital importance to the state.\nTiming: 5.2s - 8.7s\n\n\n\n# Convert to GraphNode (name auto-populated from text, truncated to 50 chars)\ngraph_node = segment.to_graph_node()\nprint(f\"GraphNode name: '{graph_node.properties['name']}'\")\nassert len(graph_node.properties['name']) &lt;= 50\n\nGraphNode name: 'The art of war is of vital importance to the state'\n\n\n\n# Title segment (without timing)\ntitle_segment = Segment(text=\"Laying Plans\", index=0, role=\"title\")\nprint(f\"Title segment: {title_segment.text} (role={title_segment.role})\")\nassert title_segment.start_time is None\n\nTitle segment: Laying Plans (role=title)",
+    "crumbs": [
+      "domains",
+      "Content Structure"
+    ]
+  },
+  {
+    "objectID": "domains/structure.html#example-building-a-narrative-spine",
+    "href": "domains/structure.html#example-building-a-narrative-spine",
+    "title": "Content Structure",
+    "section": "Example: Building a Narrative Spine",
+    "text": "Example: Building a Narrative Spine\nThis example demonstrates building a traversable graph structure from transcript content.\n\nfrom cjm_graph_plugin_system.core import SourceRef\n\n# Source reference to the transcription job\nsource = SourceRef(\n    plugin_name=\"cjm-transcription-plugin-voxtral-hf\",\n    table_name=\"transcriptions\",\n    row_id=\"b0ceddd3-05a0-40e6-ac99-1903dd3e7170\"\n)\n\n# Create the document\ndoc = Document(title=\"1. Laying Plans\", media_type=\"audio\")\n\n# Create segments from transcript sentences\nsentences = [\n    \"Laying Plans\",\n    \"Sun Tzu said,\",\n    \"The art of war is of vital importance to the state.\",\n    \"It is a matter of life and death, a road either to safety or to ruin.\",\n    \"Hence it is a subject of inquiry which can on no account be neglected.\"\n]\n\nsegments = [\n    Segment(text=text, index=i, role=\"title\" if i == 0 else \"content\")\n    for i, text in enumerate(sentences)\n]\n\n# Convert to GraphNodes with provenance\ndoc_node = doc.to_graph_node(sources=[source])\nsegment_nodes = [s.to_graph_node(sources=[source]) for s in segments]\n\nprint(f\"Document: {doc_node.properties['name']}\")\nprint(f\"Segments: {len(segment_nodes)}\")\nfor node in segment_nodes:\n    print(f\"  [{node.properties['index']}] {node.properties['name'][:40]}...\")\n\nDocument: 1. Laying Plans\nSegments: 5\n  [0] Laying Plans...\n  [1] Sun Tzu said,...\n  [2] The art of war is of vital importance to...\n  [3] It is a matter of life and death, a road...\n  [4] Hence it is a subject of inquiry which c...",
+    "crumbs": [
+      "domains",
+      "Content Structure"
+    ]
+  },
+  {
+    "objectID": "core.html",
+    "href": "core.html",
+    "title": "Core",
+    "section": "",
+    "text": "Base Pydantic model for all domain-specific graph nodes. Provides automatic conversion to the generic GraphNode format used by graph plugins.\nSubclasses define typed fields that become GraphNode.properties. The class name becomes the node label by default.\n\nsource\n\n\n\ndef DomainNode(\n    data:Any\n)-&gt;None:\n\nBase Pydantic model for domain-specific graph nodes.\n\nsource\n\n\n\n\ndef get_label(\n    \n)-&gt;str: # Node label for the graph (defaults to class name)\n\nReturn the node label.\n\nsource\n\n\n\n\ndef to_graph_node(\n    sources:List=[], # External data references for provenance\n)-&gt;GraphNode: # Generic GraphNode for storage in graph plugins\n\nConvert this domain model to a generic GraphNode.\n\n\n\n\n# Define a simple domain node subclass\nclass Person(DomainNode):\n    name: str\n    role: Optional[str] = None\n\n# Create instance with auto-generated ID\nalice = Person(name=\"Alice\", role=\"speaker\")\nprint(f\"Person: {alice}\")\nprint(f\"Label: {alice.get_label()}\")\n\nPerson: id='c48413fd-b09b-4053-8c06-71008aa58acc' name='Alice' role='speaker'\nLabel: Person\n\n\n\n# Convert to GraphNode\ngraph_node = alice.to_graph_node()\nprint(f\"GraphNode ID: {graph_node.id}\")\nprint(f\"GraphNode label: {graph_node.label}\")\nprint(f\"GraphNode properties: {graph_node.properties}\")\n\nGraphNode ID: c48413fd-b09b-4053-8c06-71008aa58acc\nGraphNode label: Person\nGraphNode properties: {'name': 'Alice', 'role': 'speaker'}\n\n\n\n\n\n\n# Create a source reference to external data\nsource = SourceRef(\n    plugin_name=\"cjm-transcription-plugin-voxtral-hf\",\n    table_name=\"transcriptions\",\n    row_id=\"job-123\",\n    segment_slice=\"timestamp:00:10-00:30\"\n)\n\n# Convert with provenance tracking\ngraph_node = alice.to_graph_node(sources=[source])\nprint(f\"Sources: {len(graph_node.sources)}\")\nprint(f\"Source ref: {graph_node.sources[0]}\")\n\nSources: 1\nSource ref: SourceRef(plugin_name='cjm-transcription-plugin-voxtral-hf', table_name='transcriptions', row_id='job-123', segment_slice='timestamp:00:10-00:30')\n\n\n\n\n\nThe to_graph_node() method automatically normalizes the name property for consistent display. If no name field exists, it falls back to title, label, or truncated text.\n\n# Domain node with 'title' instead of 'name'\nclass Book(DomainNode):\n    title: str\n    author: Optional[str] = None\n\nbook = Book(title=\"The Art of War\", author=\"Sun Tzu\")\ngraph_node = book.to_graph_node()\n\n# 'name' is auto-populated from 'title'\nprint(f\"Properties: {graph_node.properties}\")\nassert graph_node.properties['name'] == \"The Art of War\"\n\nProperties: {'title': 'The Art of War', 'author': 'Sun Tzu', 'name': 'The Art of War'}\n\n\n\n# Domain node with 'text' field (truncated to 50 chars)\nclass Quote(DomainNode):\n    text: str\n\nquote = Quote(text=\"This is a very long quote that exceeds fifty characters and will be truncated for the name field.\")\ngraph_node = quote.to_graph_node()\n\nprint(f\"Name (truncated): '{graph_node.properties['name']}'\")\nassert len(graph_node.properties['name']) == 50\n\nName (truncated): 'This is a very long quote that exceeds fifty chara'",
+    "crumbs": [
+      "Core"
+    ]
+  },
+  {
+    "objectID": "core.html#domainnode",
+    "href": "core.html#domainnode",
+    "title": "Core",
+    "section": "",
+    "text": "Base Pydantic model for all domain-specific graph nodes. Provides automatic conversion to the generic GraphNode format used by graph plugins.\nSubclasses define typed fields that become GraphNode.properties. The class name becomes the node label by default.\n\nsource\n\n\n\ndef DomainNode(\n    data:Any\n)-&gt;None:\n\nBase Pydantic model for domain-specific graph nodes.\n\nsource\n\n\n\n\ndef get_label(\n    \n)-&gt;str: # Node label for the graph (defaults to class name)\n\nReturn the node label.\n\nsource\n\n\n\n\ndef to_graph_node(\n    sources:List=[], # External data references for provenance\n)-&gt;GraphNode: # Generic GraphNode for storage in graph plugins\n\nConvert this domain model to a generic GraphNode.\n\n\n\n\n# Define a simple domain node subclass\nclass Person(DomainNode):\n    name: str\n    role: Optional[str] = None\n\n# Create instance with auto-generated ID\nalice = Person(name=\"Alice\", role=\"speaker\")\nprint(f\"Person: {alice}\")\nprint(f\"Label: {alice.get_label()}\")\n\nPerson: id='c48413fd-b09b-4053-8c06-71008aa58acc' name='Alice' role='speaker'\nLabel: Person\n\n\n\n# Convert to GraphNode\ngraph_node = alice.to_graph_node()\nprint(f\"GraphNode ID: {graph_node.id}\")\nprint(f\"GraphNode label: {graph_node.label}\")\nprint(f\"GraphNode properties: {graph_node.properties}\")\n\nGraphNode ID: c48413fd-b09b-4053-8c06-71008aa58acc\nGraphNode label: Person\nGraphNode properties: {'name': 'Alice', 'role': 'speaker'}\n\n\n\n\n\n\n# Create a source reference to external data\nsource = SourceRef(\n    plugin_name=\"cjm-transcription-plugin-voxtral-hf\",\n    table_name=\"transcriptions\",\n    row_id=\"job-123\",\n    segment_slice=\"timestamp:00:10-00:30\"\n)\n\n# Convert with provenance tracking\ngraph_node = alice.to_graph_node(sources=[source])\nprint(f\"Sources: {len(graph_node.sources)}\")\nprint(f\"Source ref: {graph_node.sources[0]}\")\n\nSources: 1\nSource ref: SourceRef(plugin_name='cjm-transcription-plugin-voxtral-hf', table_name='transcriptions', row_id='job-123', segment_slice='timestamp:00:10-00:30')\n\n\n\n\n\nThe to_graph_node() method automatically normalizes the name property for consistent display. If no name field exists, it falls back to title, label, or truncated text.\n\n# Domain node with 'title' instead of 'name'\nclass Book(DomainNode):\n    title: str\n    author: Optional[str] = None\n\nbook = Book(title=\"The Art of War\", author=\"Sun Tzu\")\ngraph_node = book.to_graph_node()\n\n# 'name' is auto-populated from 'title'\nprint(f\"Properties: {graph_node.properties}\")\nassert graph_node.properties['name'] == \"The Art of War\"\n\nProperties: {'title': 'The Art of War', 'author': 'Sun Tzu', 'name': 'The Art of War'}\n\n\n\n# Domain node with 'text' field (truncated to 50 chars)\nclass Quote(DomainNode):\n    text: str\n\nquote = Quote(text=\"This is a very long quote that exceeds fifty characters and will be truncated for the name field.\")\ngraph_node = quote.to_graph_node()\n\nprint(f\"Name (truncated): '{graph_node.properties['name']}'\")\nassert len(graph_node.properties['name']) == 50\n\nName (truncated): 'This is a very long quote that exceeds fifty chara'",
+    "crumbs": [
+      "Core"
+    ]
+  },
+  {
+    "objectID": "domains/knowledge.html",
+    "href": "domains/knowledge.html",
+    "title": "Knowledge Domain",
+    "section": "",
+    "text": "Represents a human being, historical figure, or speaker referenced in content.\n\nsource\n\n\n\ndef Person(\n    data:Any\n)-&gt;None:\n\nA human being, historical figure, or speaker.\n\n# Create a Person node\nperson = Person(name=\"Sun Tzu\", role=\"Military Strategist\", era=\"Ancient China\")\nprint(f\"Person: {person.name}\")\nprint(f\"Label: {person.get_label()}\")\n\nPerson: Sun Tzu\nLabel: Person\n\n\n\n# Convert to GraphNode\ngraph_node = person.to_graph_node()\nprint(f\"GraphNode properties: {graph_node.properties}\")\n\nGraphNode properties: {'name': 'Sun Tzu', 'role': 'Military Strategist', 'era': 'Ancient China'}",
+    "crumbs": [
+      "domains",
+      "Knowledge Domain"
+    ]
+  },
+  {
+    "objectID": "domains/knowledge.html#person",
+    "href": "domains/knowledge.html#person",
+    "title": "Knowledge Domain",
+    "section": "",
+    "text": "Represents a human being, historical figure, or speaker referenced in content.\n\nsource\n\n\n\ndef Person(\n    data:Any\n)-&gt;None:\n\nA human being, historical figure, or speaker.\n\n# Create a Person node\nperson = Person(name=\"Sun Tzu\", role=\"Military Strategist\", era=\"Ancient China\")\nprint(f\"Person: {person.name}\")\nprint(f\"Label: {person.get_label()}\")\n\nPerson: Sun Tzu\nLabel: Person\n\n\n\n# Convert to GraphNode\ngraph_node = person.to_graph_node()\nprint(f\"GraphNode properties: {graph_node.properties}\")\n\nGraphNode properties: {'name': 'Sun Tzu', 'role': 'Military Strategist', 'era': 'Ancient China'}",
+    "crumbs": [
+      "domains",
+      "Knowledge Domain"
+    ]
+  },
+  {
+    "objectID": "domains/knowledge.html#work",
+    "href": "domains/knowledge.html#work",
+    "title": "Knowledge Domain",
+    "section": "Work",
+    "text": "Work\nRepresents a creative work such as a book, speech, article, or other authored content.\n\nsource\n\nWork\n\ndef Work(\n    data:Any\n)-&gt;None:\n\nA creative work (book, speech, article, etc.).\n\n# Create a Work node\nwork = Work(title=\"The Art of War\", author_name=\"Sun Tzu\", year=-500)\nprint(f\"Work: {work.title}\")\n\n# 'name' is auto-populated from 'title'\ngraph_node = work.to_graph_node()\nprint(f\"GraphNode name: {graph_node.properties['name']}\")\n\nWork: The Art of War\nGraphNode name: The Art of War",
+    "crumbs": [
+      "domains",
+      "Knowledge Domain"
+    ]
+  },
+  {
+    "objectID": "domains/knowledge.html#concept",
+    "href": "domains/knowledge.html#concept",
+    "title": "Knowledge Domain",
+    "section": "Concept",
+    "text": "Concept\nRepresents an abstract idea, theory, or framework discussed in content.\n\nsource\n\nConcept\n\ndef Concept(\n    data:Any\n)-&gt;None:\n\nAn abstract idea, theory, or framework.\n\n# Create a Concept node\nconcept = Concept(\n    name=\"Deception in Warfare\",\n    definition=\"The use of misdirection to gain strategic advantage\",\n    domain=\"Military Strategy\"\n)\nprint(f\"Concept: {concept.name}\")\nprint(f\"Domain: {concept.domain}\")\n\nConcept: Deception in Warfare\nDomain: Military Strategy",
+    "crumbs": [
+      "domains",
+      "Knowledge Domain"
+    ]
+  },
+  {
+    "objectID": "domains/knowledge.html#topic",
+    "href": "domains/knowledge.html#topic",
+    "title": "Knowledge Domain",
+    "section": "Topic",
+    "text": "Topic\nRepresents a subject or theme discussed in content, typically extracted via topic modeling or NLP.\n\nsource\n\nTopic\n\ndef Topic(\n    data:Any\n)-&gt;None:\n\nA subject or theme discussed in content.\n\n# Create a Topic node with confidence score\ntopic = Topic(name=\"Military Strategy\", confidence=0.92)\nprint(f\"Topic: {topic.name} (confidence: {topic.confidence})\")\n\nTopic: Military Strategy (confidence: 0.92)",
+    "crumbs": [
+      "domains",
+      "Knowledge Domain"
+    ]
+  },
+  {
+    "objectID": "domains/knowledge.html#quote",
+    "href": "domains/knowledge.html#quote",
+    "title": "Knowledge Domain",
+    "section": "Quote",
+    "text": "Quote\nRepresents a specific verbatim segment of text that is noteworthy or frequently referenced.\n\nsource\n\nQuote\n\ndef Quote(\n    data:Any\n)-&gt;None:\n\nA verbatim segment of notable text.\n\n# Create a Quote node\nquote = Quote(\n    text=\"All warfare is based on deception.\",\n    speaker=\"Sun Tzu\"\n)\nprint(f\"Quote: '{quote.text}'\")\nprint(f\"Speaker: {quote.speaker}\")\n\nQuote: 'All warfare is based on deception.'\nSpeaker: Sun Tzu\n\n\n\n# 'name' is auto-populated from 'text' (truncated)\ngraph_node = quote.to_graph_node()\nprint(f\"GraphNode name: {graph_node.properties['name']}\")\n\nGraphNode name: All warfare is based on deception.",
+    "crumbs": [
+      "domains",
+      "Knowledge Domain"
+    ]
+  },
+  {
+    "objectID": "domains/knowledge.html#example-building-a-knowledge-graph",
+    "href": "domains/knowledge.html#example-building-a-knowledge-graph",
+    "title": "Knowledge Domain",
+    "section": "Example: Building a Knowledge Graph",
+    "text": "Example: Building a Knowledge Graph\n\nfrom cjm_graph_plugin_system.core import SourceRef\n\n# Source reference to a transcript\nsource = SourceRef(\n    plugin_name=\"cjm-transcription-plugin-voxtral-hf\",\n    table_name=\"transcriptions\",\n    row_id=\"lecture-001\"\n)\n\n# Create domain nodes\nauthor = Person(name=\"Sun Tzu\", role=\"Military Strategist\")\nbook = Work(title=\"The Art of War\", author_name=\"Sun Tzu\")\nconcept = Concept(name=\"Deception\", domain=\"Military Strategy\")\nquote = Quote(text=\"All warfare is based on deception.\", speaker=\"Sun Tzu\")\n\n# Convert to GraphNodes with provenance\nnodes = [\n    author.to_graph_node(sources=[source]),\n    book.to_graph_node(sources=[source]),\n    concept.to_graph_node(sources=[source]),\n    quote.to_graph_node(sources=[source])\n]\n\nprint(f\"Created {len(nodes)} graph nodes:\")\nfor node in nodes:\n    print(f\"  - {node.label}: {node.properties.get('name', 'N/A')}\")\n\nCreated 4 graph nodes:\n  - Person: Sun Tzu\n  - Work: The Art of War\n  - Concept: Deception\n  - Quote: All warfare is based on deception.",
+    "crumbs": [
+      "domains",
+      "Knowledge Domain"
+    ]
+  },
+  {
+    "objectID": "domains/relations.html",
+    "href": "domains/relations.html",
+    "title": "Domain Relations",
+    "section": "",
+    "text": "Registry of standard edge types for knowledge domain graphs. These constants ensure consistent relationship naming across plugins and UIs.\nCommon patterns: - Person -&gt; AUTHORED -&gt; Work - Work -&gt; DISCUSSES -&gt; Topic - Work -&gt; MENTIONS -&gt; Person/Concept - Work -&gt; DEFINES -&gt; Concept - Concept -&gt; RELATED_TO -&gt; Concept - Work -&gt; QUOTES -&gt; Quote\n\nsource\n\n\n\ndef KnowledgeRelations(\n    args:VAR_POSITIONAL, kwargs:VAR_KEYWORD\n):\n\nRegistry of standard edge types for knowledge graphs.\n\nsource\n\n\n\n\ndef all(\n    \n)-&gt;list: # List of all relation type strings\n\nReturn all defined relation types.\n\n# List all available relation types\nprint(\"Available relations:\")\nfor rel in KnowledgeRelations.all():\n    print(f\"  - {rel}\")\n\nAvailable relations:\n  - AUTHORED\n  - DISCUSSES\n  - MENTIONS\n  - DEFINES\n  - RELATED_TO\n  - QUOTES\n\n\n\n# Use relation constants directly\nprint(f\"AUTHORED: {KnowledgeRelations.AUTHORED}\")\nprint(f\"MENTIONS: {KnowledgeRelations.MENTIONS}\")\n\nAUTHORED: AUTHORED\nMENTIONS: MENTIONS",
+    "crumbs": [
+      "domains",
+      "Domain Relations"
+    ]
+  },
+  {
+    "objectID": "domains/relations.html#knowledgerelations",
+    "href": "domains/relations.html#knowledgerelations",
+    "title": "Domain Relations",
+    "section": "",
+    "text": "Registry of standard edge types for knowledge domain graphs. These constants ensure consistent relationship naming across plugins and UIs.\nCommon patterns: - Person -&gt; AUTHORED -&gt; Work - Work -&gt; DISCUSSES -&gt; Topic - Work -&gt; MENTIONS -&gt; Person/Concept - Work -&gt; DEFINES -&gt; Concept - Concept -&gt; RELATED_TO -&gt; Concept - Work -&gt; QUOTES -&gt; Quote\n\nsource\n\n\n\ndef KnowledgeRelations(\n    args:VAR_POSITIONAL, kwargs:VAR_KEYWORD\n):\n\nRegistry of standard edge types for knowledge graphs.\n\nsource\n\n\n\n\ndef all(\n    \n)-&gt;list: # List of all relation type strings\n\nReturn all defined relation types.\n\n# List all available relation types\nprint(\"Available relations:\")\nfor rel in KnowledgeRelations.all():\n    print(f\"  - {rel}\")\n\nAvailable relations:\n  - AUTHORED\n  - DISCUSSES\n  - MENTIONS\n  - DEFINES\n  - RELATED_TO\n  - QUOTES\n\n\n\n# Use relation constants directly\nprint(f\"AUTHORED: {KnowledgeRelations.AUTHORED}\")\nprint(f\"MENTIONS: {KnowledgeRelations.MENTIONS}\")\n\nAUTHORED: AUTHORED\nMENTIONS: MENTIONS",
+    "crumbs": [
+      "domains",
+      "Domain Relations"
+    ]
+  },
+  {
+    "objectID": "domains/relations.html#example-creating-edges-with-relations",
+    "href": "domains/relations.html#example-creating-edges-with-relations",
+    "title": "Domain Relations",
+    "section": "Example: Creating Edges with Relations",
+    "text": "Example: Creating Edges with Relations\n\nfrom uuid import uuid4\nfrom cjm_graph_plugin_system.core import GraphEdge\nfrom cjm_graph_domains.domains.knowledge import Person, Work, Concept, Quote\n\n# Create domain nodes\nauthor = Person(name=\"Sun Tzu\")\nbook = Work(title=\"The Art of War\")\nconcept = Concept(name=\"Deception\")\nquote = Quote(text=\"All warfare is based on deception.\")\n\n# Create edges using standard relation types\nedges = [\n    GraphEdge(\n        id=str(uuid4()),\n        source_id=author.id,\n        target_id=book.id,\n        relation_type=KnowledgeRelations.AUTHORED\n    ),\n    GraphEdge(\n        id=str(uuid4()),\n        source_id=book.id,\n        target_id=concept.id,\n        relation_type=KnowledgeRelations.DEFINES\n    ),\n    GraphEdge(\n        id=str(uuid4()),\n        source_id=book.id,\n        target_id=quote.id,\n        relation_type=KnowledgeRelations.QUOTES\n    )\n]\n\nprint(f\"Created {len(edges)} edges:\")\nfor edge in edges:\n    print(f\"  - {edge.relation_type}\")\n\nCreated 3 edges:\n  - AUTHORED\n  - DEFINES\n  - QUOTES",
+    "crumbs": [
+      "domains",
+      "Domain Relations"
+    ]
+  },
+  {
+    "objectID": "domains/relations.html#structurerelations",
+    "href": "domains/relations.html#structurerelations",
+    "title": "Domain Relations",
+    "section": "StructureRelations",
+    "text": "StructureRelations\nRegistry of standard edge types for content structure graphs. These relations define how documents and segments are connected to form a traversable “narrative spine”.\nCommon patterns: - Document -&gt; STARTS_WITH -&gt; Segment (entry point) - Segment -&gt; NEXT -&gt; Segment (sequential traversal) - Segment -&gt; PART_OF -&gt; Document (containment)\n\nsource\n\nStructureRelations\n\ndef StructureRelations(\n    args:VAR_POSITIONAL, kwargs:VAR_KEYWORD\n):\n\nRegistry of standard edge types for content structure graphs.\n\nsource\n\n\nStructureRelations.all\n\ndef all(\n    \n)-&gt;list: # List of all relation type strings\n\nReturn all defined relation types.\n\n# List all structure relation types\nprint(\"Structure relations:\")\nfor rel in StructureRelations.all():\n    print(f\"  - {rel}\")\n\nStructure relations:\n  - NEXT\n  - PART_OF\n  - STARTS_WITH\n\n\n\n# Use relation constants directly\nprint(f\"NEXT: {StructureRelations.NEXT}\")\nprint(f\"PART_OF: {StructureRelations.PART_OF}\")\nprint(f\"STARTS_WITH: {StructureRelations.STARTS_WITH}\")\n\nNEXT: NEXT\nPART_OF: PART_OF\nSTARTS_WITH: STARTS_WITH",
+    "crumbs": [
+      "domains",
+      "Domain Relations"
+    ]
+  },
+  {
+    "objectID": "domains/relations.html#example-building-a-narrative-spine",
+    "href": "domains/relations.html#example-building-a-narrative-spine",
+    "title": "Domain Relations",
+    "section": "Example: Building a Narrative Spine",
+    "text": "Example: Building a Narrative Spine\nThis example demonstrates creating edges that form a traversable document structure.\n\nfrom cjm_graph_domains.domains.structure import Document, Segment\n\n# Create document and segments\ndoc = Document(title=\"1. Laying Plans\", media_type=\"audio\")\nsegments = [\n    Segment(text=\"Laying Plans\", index=0, role=\"title\"),\n    Segment(text=\"Sun Tzu said,\", index=1),\n    Segment(text=\"The art of war is of vital importance to the state.\", index=2),\n]\n\n# Build the narrative spine edges\nedges = []\n\n# Document entry point: STARTS_WITH first segment\nedges.append(GraphEdge(\n    id=str(uuid4()),\n    source_id=doc.id,\n    target_id=segments[0].id,\n    relation_type=StructureRelations.STARTS_WITH\n))\n\n# Sequential links: NEXT between consecutive segments\nfor i in range(len(segments) - 1):\n    edges.append(GraphEdge(\n        id=str(uuid4()),\n        source_id=segments[i].id,\n        target_id=segments[i + 1].id,\n        relation_type=StructureRelations.NEXT\n    ))\n\n# Containment: each segment PART_OF document\nfor seg in segments:\n    edges.append(GraphEdge(\n        id=str(uuid4()),\n        source_id=seg.id,\n        target_id=doc.id,\n        relation_type=StructureRelations.PART_OF\n    ))\n\nprint(f\"Created {len(edges)} structure edges:\")\nfor edge in edges:\n    print(f\"  - {edge.relation_type}\")\n\nCreated 6 structure edges:\n  - STARTS_WITH\n  - NEXT\n  - NEXT\n  - PART_OF\n  - PART_OF\n  - PART_OF",
+    "crumbs": [
+      "domains",
+      "Domain Relations"
+    ]
+  }
+]
