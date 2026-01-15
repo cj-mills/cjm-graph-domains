@@ -24,6 +24,13 @@ class Segment(DomainNode):
     
     text: str = Field(..., description="The segment text content")  # Segment text
     index: int = Field(..., description="Sequence position (0-indexed)")  # Position in sequence
+    role: str = Field("content", description="Segment role")  # 'content', 'title', or 'heading'
+    
     start_time: Optional[float] = Field(None, description="Start time in seconds")  # Audio/video start
     end_time: Optional[float] = Field(None, description="End time in seconds")  # Audio/video end
-    role: str = Field("content", description="Segment role")  # 'content', 'title', or 'heading'
+
+    # Text/OCR/Code Coordinates
+    start_char: Optional[int] = Field(None, description="Start string index (0-indexed)") # Starting string index
+    end_char: Optional[int] = Field(None, description="End string index (0-indexed)") # Ending string index
+    page_number: Optional[int] = Field(None, description="Start page number (1-indexed)") # For PDFs/EPUBs
+    line_number: Optional[int] = Field(None, description="Start line number (0-indexed)") # For Code    

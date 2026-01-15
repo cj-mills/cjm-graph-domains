@@ -30,8 +30,8 @@ graph LR
     domains_structure[domains.structure<br/>Content Structure]
 
     domains_knowledge --> core
-    domains_relations --> domains_structure
     domains_relations --> domains_knowledge
+    domains_relations --> domains_structure
     domains_structure --> core
 ```
 
