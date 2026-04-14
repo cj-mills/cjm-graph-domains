@@ -1,3 +1,30 @@
 [build-system]
-requires = ["setuptools>=64.0"]
+requires = ["setuptools>=64"]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "cjm-graph-domains"
+dynamic = ["version"]
+description = "A shared library of Pydantic models and standard schemas for the cjm-graph-plugin-system ecosystem, enabling type-safe domain definitions across plugins and UIs."
+readme = "README.md"
+requires-python = ">=3.11"
+license = {text = "Apache-2.0"}
+authors = [{name = "Christian J. Mills", email = "9126128+cj-mills@users.noreply.github.com"}]
+keywords = ['nbdev', 'jupyter', 'notebook', 'python']
+classifiers = ["Natural Language :: English", "Intended Audience :: Developers", "Development Status :: 3 - Alpha", "Programming Language :: Python :: 3", "Programming Language :: Python :: 3 :: Only"]
+dependencies = ['cjm_graph_plugin_system']
+
+[project.urls]
+Repository = "https://github.com/cj-mills/cjm-graph-domains"
+Documentation = "https://cj-mills.github.io/cjm-graph-domains"
+
+[project.entry-points.nbdev]
+cjm_graph_domains = "cjm_graph_domains._modidx:d"
+
+[tool.setuptools.dynamic]
+version = {attr = "cjm_graph_domains.__version__"}
+
+[tool.setuptools.packages.find]
+include = ["cjm_graph_domains"]
+
+[tool.nbdev]
