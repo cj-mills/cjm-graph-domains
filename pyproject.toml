@@ -7,7 +7,7 @@ name = "cjm-graph-domains"
 dynamic = ["version"]
 description = "A shared library of Pydantic models and standard schemas for the cjm-graph-plugin-system ecosystem, enabling type-safe domain definitions across plugins and UIs."
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.12"
 license = {text = "Apache-2.0"}
 authors = [{name = "Christian J. Mills", email = "9126128+cj-mills@users.noreply.github.com"}]
 keywords = ['nbdev', 'jupyter', 'notebook', 'python']
